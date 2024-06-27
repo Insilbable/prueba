@@ -1,0 +1,114 @@
+#pragma region VEXcode Generated Robot Configuration
+// Make sure all required headers are included.
+ #include <stdio.h>
+ #include <stdlib.h>
+ #include <stdbool.h>
+ #include <math.h>
+ #include <string.h>
+
+
+ #include "vex.h"
+
+ using namespace vex;
+
+ // Brain should be defined by default
+ brain Brain;
+
+
+ // START IQ MACROS
+ #define waitUntil(condition) \
+ do { \
+ wait(5, msec); \
+ } while (!(condition))
+
+ #define repeat(iterations) \
+ for (int iterator = 0; iterator < iterations; iterator++)
+ // END IQ MACROS
+
+
+ // Robot configuration code.
+ inertial BrainInertial = inertial();
+ optical OF = optical(PORT5);
+ motor VOLANTE = motor(PORT6, true);
+ motor LeftDriveSmart = motor(PORT1, 1, false);
+ motor RightDriveSmart = motor(PORT12, 1, true);
+ drivetrain Drivetrain = drivetrain(LeftDriveSmart, RightDriveSmart, 200, 173, 76, mm, 1);
+ distance DI = distance(PORT3);
+ distance DD = distance(PORT11);
+ optical OA = optical(PORT4);
+
+#pragma endregion VEXcode Generated Robot Configuration
+
+ // Include the IQ Library
+ #include "vex.h"
+
+ // Allows for easier use of the VEX Library
+ using namespace vex;
+
+ int Brain_precision = 0, Console_precision = 0;
+
+ float myVariable;
+
+ // "when started" hat block
+ int whenStarted1() {
+ while (true) {
+ OA.setLightPower(100.0, percent);
+ OF.setLight(ledState::off);
+ Drivetrain.drive(forward);
+ Drivetrain.setDriveVelocity(99.0, percent);
+ OF.setLightPower(100.0, percent);
+ if (DI.objectDistance(mm) < 100.0) {
+ VOLANTE.spinFor(reverse, 40.0, degrees, true);
+ wait(0.6, seconds);
+ VOLANTE.spinFor(forward, 80.0, degrees, true);
+ wait(0.6, seconds);
+ VOLANTE.spinFor(reverse, 40.0, degrees, true);
+ }
+ if (DD.objectDistance(mm) < 100.0) {
+ VOLANTE.spinFor(forward, 40.0, degrees, true);
+ wait(0.6, seconds);
+ VOLANTE.spinFor(reverse, 80.0, degrees, true);
+ wait(0.6, seconds);
+ VOLANTE.spinFor(forward, 40.0, degrees, true);
+ }
+ if (OF.color() == green) {
+ Brain.Screen.setCursor(1, 1);
+ Brain.Screen.setFillColor(green);
+ Brain.Screen.print("VERDE");
+ Drivetrain.drive(reverse);
+ wait(0.6, seconds);
+ Drivetrain.drive(forward);
+ VOLANTE.spinFor(forward, 40.0, degrees, true);
+ wait(0.5, seconds);
+ VOLANTE.spinFor(reverse, 40.0, degrees, true);
+ }
+ if (OF.color() == red) {
+ Brain.Screen.setCursor(1, 1);
+ Brain.Screen.setFillColor(red);
+ Brain.Screen.print("ROJO");
+ Drivetrain.drive(reverse);
+ wait(0.6, seconds);
+ Drivetrain.drive(forward);
+ VOLANTE.spinFor(reverse, 40.0, degrees, true);
+ wait(0.5, seconds);
+ VOLANTE.spinFor(forward, 40.0, degrees, true);
+ }
+ // AH DER-IZQ
+ if (OA.color() == orange) {
+ VOLANTE.spinFor(reverse, 40.0, degrees, true);
+ wait(0.5, seconds);
+ VOLANTE.spinFor(forward, 40.0, degrees, true);
+ }
+ if (OA.color() == blue) {
+ VOLANTE.spinFor(reverse, 40.0, degrees, true);
+ wait(0.5, seconds);
+ VOLANTE.spinFor(forward, 40.0, degrees, true);
+ }
+ wait(20, msec);
+ }
+return 0;
+ }
+
+
+ int main() {
+ whenStarted1();
